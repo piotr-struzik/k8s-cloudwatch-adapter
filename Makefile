@@ -6,7 +6,8 @@ VENDOR_DOCKERIZED?=0
 
 VERSION:=$(or ${TRAVIS_TAG},${TRAVIS_TAG},latest)
 GOIMAGE=golang:1.13
-GOFLAGS=-mod=vendor -tags=netgo
+#GOFLAGS=-mod=vendor -tags=netgo
+GOFLAGS=-tags=netgo
 
 .PHONY: all docker-build push test build-local-image
 
