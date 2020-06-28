@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"time"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -14,25 +15,29 @@ import (
 
 // NewCloudWatchClient creates a new CloudWatch client.
 func NewCloudWatchClient() Client {
-	// Using the SDK's default configuration, loading additional config
-	// and credentials values from the environment variables, shared
-	// credentials, and shared configuration files
-	cfg := aws.NewConfig()
-
-	// check if region is set
-	if aws.StringValue(cfg.Region) == "" {
-		cfg.Region = aws.String(GetLocalRegion())
-	}
-	klog.Infof("using AWS Region: %s", aws.StringValue(cfg.Region))
-
-	if os.Getenv("DEBUG") == "true" {
-		cfg = cfg.WithLogLevel(aws.LogDebugWithHTTPBody)
-	}
-
-	// Using the Config value, create the CloudWatch client
-	sess := session.Must(session.NewSession(cfg))
-	svc := cloudwatch.New(sess)
-	return &cloudwatchClient{client: svc}
+        // Using the SDK's default configuration, loading additional config
+        // and credentials values from the environment variables, shared
+        // credentials, and shared configuration files
+        //cfg := aws.NewConfig()
+        klog.Infof("AWS_REGION:%s", os.Getenv("AWS_REGION"))
+        klog.Infof("AWS_ACCESS_KEY_ID:%s", os.Getenv("AWS_ACCESS_KEY_ID"))
+        klog.Infof("AWS_SECRET_ACCESS_KEY:%s", os.Getenv("AWS_SECRET_ACCESS_KEY"))
+/*
+        // check if region is set
+        if aws.StringValue(cfg.Region) == "" {
+                cfg.Region = aws.String(GetLocalRegion())
+        }
+        klog.Infof("using AWS Region: %s", aws.StringValue(cfg.Region))
+        if os.Getenv("DEBUG") == "true" {
+                cfg = cfg.WithLogLevel(aws.LogDebugWithHTTPBody)
+        }
+        // Using the Config value, create the CloudWatch client
+        //sess := session.Must(session.NewSession(cfg))
+*/
+        sess := session.Must(session.NewSession())
+        klog.Infof("sess.config.Region:%s", aws.StringValue(sess.Config.Region))
+        svc := cloudwatch.New(sess)
+        return &cloudwatchClient{client: svc}
 }
 
 type cloudwatchClient struct {
