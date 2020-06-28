@@ -48,6 +48,10 @@ func (c *cloudwatchClient) Query(queries []config.MetricDataQuery) ([]*cloudwatc
 	// If changing logic in this function ensure changes are duplicated in
 	// `pkg/controller.handleExternalMetric()`
 	cwMetricQueries := make([]*cloudwatch.MetricDataQuery, len(queries))
+	
+	out, _ := json.Marshal(cwMetricQueries)
+	klog.V(2).Infof("XX cwMetricQueries: %s", string(out))
+
 	for i, q := range queries {
 		q := q
 		mdq := &cloudwatch.MetricDataQuery{
