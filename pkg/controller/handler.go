@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 
+	"encoding/json"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
 	listers "github.com/awslabs/k8s-cloudwatch-adapter/pkg/client/listers/metrics/v1alpha1"
@@ -69,6 +71,9 @@ func (h *Handler) handleExternalMetric(ns, name string, queueItem namespacedQueu
 	klog.V(2).Infof("externalMetricInfo: %v", externalMetricInfo)
 	queries := externalMetricInfo.Spec.Queries
 
+	out, _ := json.Marshal(queries)
+	klog.V(2).Infof("XX queries: %s", string(out))
+	
 	// If changing logic in this block ensure changes are duplicated in
 	// `pkg/client.Query()`
 	cwMetricQueries := make([]*cloudwatch.MetricDataQuery, len(queries))
